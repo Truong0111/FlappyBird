@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4df82a93176f514aa265033f607b01d, type: 3}
+  m_Name: PrefabsStorage
+  m_EditorClassIdentifier: 
+  bird: {fileID: 7436767865230019649, guid: d671ade38d97c5d438a7ec0e046ce719, type: 3}
+  pipe: {fileID: 35668408314560745, guid: 2564bc44ae073694e917ab2c1d43f355, type: 3}
+  pipeGroup: {fileID: 1122393076108606135, guid: c7cec1c7c656f984a895eee542399957, type: 3}

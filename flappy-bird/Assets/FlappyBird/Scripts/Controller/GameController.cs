@@ -1,18 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityAtoms.BaseAtoms;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : Singleton<GameController>
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private VoidEvent startEvent;
+    [SerializeField] private VoidEvent scoreUpdateEvent;
+    
+    [ShowInInspector] public int CurrentScore { get; set; }
+
+    public override void Awake()
     {
-        
+        base.Awake();
+        startEvent.Register(StartGame);
+        // scoreUpdateEvent.Register(UpdateScore);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDestroy()
     {
-        
+        startEvent.Register(StartGame);
+        // scoreUpdateEvent.Unregister(UpdateScore);
+    }
+
+    private void Start()
+    {
+        scoreUpdateEvent.Raise();
+    }
+
+    private void StartGame()
+    {
+        CurrentScore = 0;
+        scoreUpdateEvent.Raise();
     }
 }

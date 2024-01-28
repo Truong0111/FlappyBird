@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PrefabsStorage : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+[CreateAssetMenu(fileName = "PrefabsStorage", menuName = "Data/PrefabsStorage", order = 2)]
+public class PrefabsStorage : ScriptableObject
+{
+    public Bird bird;
+    public Pipe pipe;
+    public PipeGroup pipeGroup;
 }
