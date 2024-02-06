@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7436767865230019646
 Transform:
   m_ObjectHideFlags: 0
@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83d927e632dadd941862901848f69bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startEvent: {fileID: 11400000, guid: 097a0a63780dc7e49b6dd6212f2da263, type: 2}
   loseEvent: {fileID: 11400000, guid: 69965522b55b3034badcb1ed8cf145fd, type: 2}
   jumpForce: 5
   gravityScale: 2

@@ -2,28 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Sirenix.OdinInspector;
+using UnityAtoms.BaseAtoms;
 using UnityEngine;
 
 public class BirdAction : MonoBehaviour
 {
-    [SerializeField] private float zChange = 35f;
-    [SerializeField] private int frameCountToUpdateUp = 1;
-    [SerializeField] private int frameCountToUpdateDown = 10;
+    [Title("Value")] [SerializeField] private float zChange = 35f;
     [SerializeField] private float timeRotateUp = 0.1f;
     [SerializeField] private float timeRotateDown = 0.25f;
 
     private Bird _bird;
     private Rigidbody2D _rigidbody2D;
-
-    private bool CheckDead
-    {
-        get
-        {
-            _rigidbody2D.isKinematic = _bird.IsDead;
-            if (_bird.IsDead) _rigidbody2D.velocity = Vector2.zero;
-            return _bird.IsDead;
-        }
-    }
 
     private void Awake()
     {
@@ -33,12 +23,24 @@ public class BirdAction : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(UpdateRotation(_isLerp, ApplyRotate));
+        StartCoroutine(UpdateRotation(ApplyRotate));
+    }
+
+    private bool IsKinematic
+    {
+        get
+        {
+            var isKinematic = !_bird.IsStart || _bird.IsDead;
+            if (isKinematic) _rigidbody2D.velocity = Vector3.zero;
+            return isKinematic;
+        }
     }
 
     private void Update()
     {
-        if (CheckDead) enabled = false;
+        _rigidbody2D.isKinematic = IsKinematic;
+        if (_bird.IsDead) return;
+        if (!_bird.IsStart) return;
         ApplyGravity();
         ApplyJump();
     }
@@ -60,35 +62,41 @@ public class BirdAction : MonoBehaviour
 
     private void ApplyRotate(Vector3 rotation)
     {
+        if (rotation.z > 0)
+        {
+            _isLerp = false;
+            transform.DOKill();
+        }
+        
+        if(_isLerp) return;
         _isLerp = true;
-        transform.DORotateQuaternion(Quaternion.Euler(rotation), rotation.z > 0 ? timeRotateUp : timeRotateDown)
+        transform.DORotateQuaternion(endValue: Quaternion.Euler(rotation),
+                duration: rotation.z > 0 ? timeRotateUp : timeRotateDown)
             .SetEase(Ease.Linear)
-            .OnComplete(() => _isLerp = true);
+            .OnComplete(() => _isLerp = false);
     }
 
-    private IEnumerator UpdateRotation(bool isDead, Action<Vector3> onUpdate = null, Action endUpdate = null)
+    private IEnumerator UpdateRotation(Action<Vector3> onUpdate = null, Action endUpdate = null)
     {
-        var currentFrame = 0;
-
-        while (true)
+        while (!_bird.IsDead)
         {
-            if (isDead) break;
             if (_isLerp) yield return null;
 
             var yUp = _rigidbody2D.velocity.y;
-
             var rotate = Vector3.zero;
 
-            if (yUp == 0) yield return null;
-
-            if (currentFrame % (yUp > 0 ? frameCountToUpdateUp : frameCountToUpdateDown) == 0)
+            if (!_bird.IsStart)
+            {
+                //None
+            }
+            else if (yUp == 0) yield return null;
+            else
             {
                 rotate = Vector3.forward * ((yUp > 0 ? 1 : -1) * zChange);
             }
 
             onUpdate?.Invoke(rotate);
             yield return null;
-            currentFrame++;
         }
 
         endUpdate?.Invoke();
